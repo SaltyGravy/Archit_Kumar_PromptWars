@@ -9,8 +9,6 @@ interface HeaderProps {
   currentRole: UserRole;
   currentUser: User | undefined;
   onRoleChange: (role: UserRole) => void;
-  isSplitView: boolean;
-  onToggleSplitView: () => void;
   onOpenRegister: () => void;
   onOpenPass: () => void;
 }
@@ -19,8 +17,6 @@ export const Header: React.FC<HeaderProps> = ({
   currentRole,
   currentUser,
   onRoleChange,
-  isSplitView,
-  onToggleSplitView,
   onOpenRegister,
   onOpenPass,
 }) => {
@@ -51,8 +47,6 @@ export const Header: React.FC<HeaderProps> = ({
             <RoleSwitcher
               currentRole={currentRole}
               onRoleChange={onRoleChange}
-              isSplitView={isSplitView}
-              onToggleSplitView={onToggleSplitView}
             />
 
             <div className="hidden lg:flex items-center gap-2">

@@ -1,19 +1,15 @@
 import React from 'react';
 import { UserRole } from '../../types';
-import { UserCheck, Award, ShieldAlert, Users } from 'lucide-react';
+import { UserCheck, Award, ShieldAlert } from 'lucide-react';
 
 interface RoleSwitcherProps {
   currentRole: UserRole;
   onRoleChange: (role: UserRole) => void;
-  isSplitView: boolean;
-  onToggleSplitView: () => void;
 }
 
 export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   currentRole,
   onRoleChange,
-  isSplitView,
-  onToggleSplitView,
 }) => {
   const roles: { role: UserRole; label: string; icon: React.ElementType; color: string }[] = [
     { role: 'participant', label: 'Participant', icon: UserCheck, color: 'hover:text-emerald-400' },
@@ -30,17 +26,14 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
         aria-label="User role navigation"
       >
         {roles.map(({ role, label, icon: Icon }) => {
-          const isActive = currentRole === role && !isSplitView;
+          const isActive = currentRole === role;
           return (
             <button
               key={role}
               role="tab"
               aria-selected={isActive}
               aria-label={`Switch to ${label} role view`}
-              onClick={() => {
-                if (isSplitView) onToggleSplitView();
-                onRoleChange(role);
-              }}
+              onClick={() => onRoleChange(role)}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 isActive
                   ? role === 'participant'
@@ -57,23 +50,6 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
           );
         })}
       </div>
-
-      {/* Split-View Simulator Button */}
-      <button
-        type="button"
-        onClick={onToggleSplitView}
-        aria-pressed={isSplitView}
-        aria-label="Toggle multi-role split screen sandbox simulator"
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all ${
-          isSplitView
-            ? 'bg-gradient-to-r from-emerald-600/30 to-indigo-600/30 border-brand-500 text-white shadow-lg'
-            : 'bg-slate-900/90 border-slate-800 text-slate-300 hover:border-slate-700 hover:text-white'
-        }`}
-      >
-        <Users className="w-3.5 h-3.5 text-brand-400" />
-        <span className="hidden md:inline">Multi-Role Sandbox</span>
-        <span className="md:hidden">Split</span>
-      </button>
     </div>
   );
 };

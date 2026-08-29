@@ -6,7 +6,6 @@ import { CriticalAlertBanner } from './features/announcements/CriticalAlertBanne
 import { ParticipantDashboard } from './features/dashboards/ParticipantDashboard';
 import { JudgeDashboard } from './features/dashboards/JudgeDashboard';
 import { OrganizerDashboard } from './features/dashboards/OrganizerDashboard';
-import { SplitViewSimulator } from './features/dashboards/SplitViewSimulator';
 import { RegistrationModal } from './features/registration/RegistrationModal';
 import { CreateTeamModal } from './features/teams/CreateTeamModal';
 import { Modal } from './components/shared/Modal';
@@ -15,7 +14,6 @@ import { ToastProvider } from './components/shared/Toast';
 
 const AppContent: React.FC = () => {
   const [, setTick] = useState(0);
-  const [isSplitView, setIsSplitView] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false);
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
@@ -48,8 +46,6 @@ const AppContent: React.FC = () => {
         currentRole={currentRole}
         currentUser={currentUser}
         onRoleChange={handleRoleChange}
-        isSplitView={isSplitView}
-        onToggleSplitView={() => setIsSplitView(!isSplitView)}
         onOpenRegister={() => setIsRegisterOpen(true)}
         onOpenPass={() => setIsPassModalOpen(true)}
       />
@@ -59,28 +55,22 @@ const AppContent: React.FC = () => {
 
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {isSplitView ? (
-          <SplitViewSimulator />
-        ) : (
-          <>
-            {currentRole === 'participant' && currentUser && (
-              <ParticipantDashboard
-                currentUser={currentUser}
-                onOpenCreateTeam={() => setIsCreateTeamOpen(true)}
-              />
-            )}
+        {currentRole === 'participant' && currentUser && (
+          <ParticipantDashboard
+            currentUser={currentUser}
+            onOpenCreateTeam={() => setIsCreateTeamOpen(true)}
+          />
+        )}
 
-            {currentRole === 'judge' && currentUser && (
-              <JudgeDashboard currentUser={currentUser} />
-            )}
+        {currentRole === 'judge' && currentUser && (
+          <JudgeDashboard currentUser={currentUser} />
+        )}
 
-            {currentRole === 'organizer' && currentUser && (
-              <OrganizerDashboard
-                currentUser={currentUser}
-                onOpenCreateTeam={() => setIsCreateTeamOpen(true)}
-              />
-            )}
-          </>
+        {currentRole === 'organizer' && currentUser && (
+          <OrganizerDashboard
+            currentUser={currentUser}
+            onOpenCreateTeam={() => setIsCreateTeamOpen(true)}
+          />
         )}
       </main>
 
