@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper Functions for Role-Based Access Control
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserRole() {
+      return request.auth.token.role;
+    }
+    
+    function isOrganizer() {
+      return isAuthenticated() && (getUserRole() == 'organizer' || request.auth.token.admin == true);
+    }
+    
+    function isJudge() {
+      return isAuthenticated() && (getUserRole() == 'judge' || isOrganizer());
+    }
+    
+    function isParticipant() {
+      return isAuthenticated() && getUserRole() == 'participant';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Events Collection (Multi-tenant partition)
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isOrganizer();
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || isOrganizer();
+      allow delete: if isOrganizer();
+    }
+
+    // Teams Collection
+    match /teams/{teamId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isOrganizer() || (
+        isAuthenticated() && 
+        (request.auth.uid in resource.data.member_ids || request.auth.uid in request.resource.data.member_ids) &&
+        resource.data.status != 'locked'
+      );
+      allow delete: if isOrganizer() || (isAuthenticated() && request.auth.uid == resource.data.leader_id);
+    }
+
+    // Check-in Records (Secure attendee verification)
+    match /checkins/{checkInId} {
+      allow read: if isAuthenticated() && (isOrganizer() || isOwner(resource.data.user_id));
+      // Only Organizers with verified scan capability can mark attendee checked in
+      allow create, update: if isOrganizer();
+      allow delete: if isOrganizer();
+    }
+
+    // Announcements Collection (Broadcasts)
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow create, update, delete: if isOrganizer();
+    }
+
+    // Rubrics Collection (Judging criteria)
+    match /rubrics/{rubricId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isOrganizer();
+    }
+
+    // Scores Collection (Atomic, auditable judging)
+    match /scores/{scoreId} {
+      // Judges can read their own scores, Organizers can read all scores, Participants CANNOT read raw judge sheets
+      allow read: if isOrganizer() || (isJudge() && resource.data.judge_id == request.auth.uid);
+      
+      // Only Judges can submit scores for their assigned teams
+      allow create: if isJudge() && request.resource.data.judge_id == request.auth.uid;
+      
+      // Judges can only update before the score is locked
+      allow update: if isJudge() && 
+        resource.data.judge_id == request.auth.uid && 
+        resource.data.locked == false && 
+        request.resource.data.judge_id == request.auth.uid;
+        
+      // Participants CANNOT write to Score under any circumstance
+      allow delete: if isOrganizer();
+    }
+  }
+}
