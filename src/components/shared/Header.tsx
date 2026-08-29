@@ -1,7 +1,6 @@
 import React from 'react';
 import { UserRole, User } from '../../types';
 import { RoleSwitcher } from './RoleSwitcher';
-import { RealtimeIndicator } from './RealtimeIndicator';
 import { Sparkles, RotateCcw, UserPlus, QrCode } from 'lucide-react';
 import { realtimeStore } from '../../services/realtimeStore';
 
@@ -42,16 +41,12 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Role Navigation & Realtime Status */}
+          {/* Role Navigation */}
           <div className="flex items-center gap-3">
             <RoleSwitcher
               currentRole={currentRole}
               onRoleChange={onRoleChange}
             />
-
-            <div className="hidden lg:flex items-center gap-2">
-              <RealtimeIndicator />
-            </div>
           </div>
 
           {/* User Profile & Quick Actions */}
