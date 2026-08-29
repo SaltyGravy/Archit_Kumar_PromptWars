@@ -26,7 +26,7 @@ interface RealtimeState {
   isLiveFirebase: boolean;
 }
 
-const STORAGE_KEY = 'eventnexus_state_v1';
+const STORAGE_KEY = 'eventnexus_state_v3';
 const CHANNEL_NAME = 'eventnexus_realtime_sync';
 
 class RealtimeStore {

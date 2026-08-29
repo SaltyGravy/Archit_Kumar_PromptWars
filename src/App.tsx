@@ -108,14 +108,6 @@ const AppContent: React.FC = () => {
           <AttendeeBadge user={currentUser} checkIn={userCheckIn} />
         </Modal>
       )}
-
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950/60 py-6 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>EventNexus Platform • Google for Developers Hackathon</span>
-          <span className="font-mono text-[11px] text-slate-400">Deployed on Google Cloud • Firebase & Gemini AI</span>
-        </div>
-      </footer>
     </div>
   );
 };
