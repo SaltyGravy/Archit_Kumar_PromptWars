@@ -4,7 +4,7 @@ import { generateAttendeeQRToken } from './qrService';
 export const SEED_EVENT: Event = {
   id: 'evt-ai-challenge-2026',
   name: 'Global AI Hackathon 2026',
-  tagline: 'Build with AI — Next-Gen Real-time Cloud Challenge',
+  tagline: 'Next-Gen Real-Time Smart Event Platform',
   description: 'The premier national AI & Cloud hackathon bringing together builders, designers, and innovators to create impactful real-time applications on Google Cloud and Gemini AI.',
   dates: {
     start: '2026-08-29T09:00:00.000Z',

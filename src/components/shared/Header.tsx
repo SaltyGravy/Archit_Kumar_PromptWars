@@ -43,9 +43,6 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-base tracking-tight text-white">EventNexus</span>
-              <span className="hidden sm:inline-block text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                Build with AI
-              </span>
             </div>
           </div>
 
